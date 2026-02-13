@@ -1,19 +1,13 @@
 <html>
   <head>
     <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
-    <script src="../../../dist/aframe-master.min.js"></script>
-    <script src="js/components/aframe-tooltip-component.js"></script>
-    <script src="js/components/camera-position.js"></script>
-    <script src="js/components/link-controls.js"></script>
     <script src="https://unpkg.com/aframe-environment-component@1.5.x/dist/aframe-environment-component.min.js"></script>
-    <script src="../../js/info-message.js"></script>
   </head>
   <body>
-    <a-scene cursor="rayOrigin: mouse" raycaster="objects: [link]">
+    <a-scene cursor="rayOrigin: mouse" raycaster="objects: .clickable">
       <a-assets>
         <img id="tiktok" crossorigin="anonymous" 
              src="https://imgs.search.brave.com/zTBLtlFSrJI8Q6GG8cTt1xYIT1651_3-9uCBRfLdbjY/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90aHVt/YnMuZHJlYW1zdGlt/ZS5jb20vYi90aWt0/b2stc2ltcGxlLXZl/Y3Rvci1maWxsZWQt/ZmxhdC1zb2NpYWwt/bWVkaWEtaWNvbnMvdGlrdG9rLWxvZ28tc29saWQtYmxhY2stcGljdG9ncmFtLWlzb2xhdGVkLXdoaXRlLWJhY2tncm91bmQtMTU5MDI5MjI1LmpwZw">
-        <a-asset-item id="messageText" src="message.html"></a-asset-item>
       </a-assets>
       
       <!-- Objetos 3D -->
@@ -22,26 +16,41 @@
       <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
       <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
       
-      <!-- ENLACE CORREGIDO: Configurado para requerir clic explícito -->
-      <a-link 
-        href="https://zonafosfeno.github.io/acab/" 
-        position="0 0.5 -3" 
-        image="#tiktok" 
-        title="Haz clic para ir a Web"
-        titleColor="#FFFFFF"
-        titlePosition="bottom"
-        visualAspect="halfEllipse"
-        radius="0.1"
-        peekMode="false"  <!-- Desactivado el peekMode que podía causar activación -->
-        onClick="event.preventDefault(); window.open('https://zonafosfeno.github.io/acab/', '_blank');">
-      </a-link>
+      <!-- ENLACE PERSONALIZADO - Solo funciona con clic explícito -->
+      <a-entity 
+        position="0 0.5 -3"
+        class="clickable"
+        geometry="primitive: cylinder; radius: 0.5; height: 0.2"
+        material="color: #4CC3D9; emissive: #2A6F9C"
+        animation__mouseenter="property: scale; to: 1.1 1.1 1.1; dur: 200; easing: easeInOutQuad"
+        animation__mouseleave="property: scale; to: 1 1 1; dur: 200; easing: easeInOutQuad">
+        
+        <!-- Imagen del logo -->
+        <a-image 
+          src="#tiktok" 
+          width="0.8" 
+          height="0.8" 
+          position="0 0.2 0"
+          transparent="true">
+        </a-image>
+        
+        <!-- Texto del enlace -->
+        <a-text 
+          value="Haz CLIC para ir a Web" 
+          position="0 -0.3 0"
+          color="white"
+          align="center"
+          width="2"
+          scale="0.5 0.5 0.5">
+        </a-text>
+      </a-entity>
       
-      <!-- Cursor mejorado para mejor interacción -->
+      <!-- Cursor desactivado para enlaces -->
       <a-cursor 
         color="#4CC3D9"
         fuse="false"
-        timeout="1000"
-        material="color: #4CC3D9; shader: flat">
+        timeout="0"
+        material="color: #4CC3D9">
       </a-cursor>
       
       <a-sky color="#87CEEB"></a-sky>
@@ -49,17 +58,30 @@
       <!-- Cámara -->
       <a-entity camera="userHeight: 1.6" look-controls wasd-controls></a-entity>
       
-      <a-entity id="leftHand" link-controls="hand: left"></a-entity>
-      <a-entity id="rightHand" link-controls="hand: right"></a-entity>
-      
-      <!-- Mensaje de instrucciones -->
+      <!-- Mensaje instructivo -->
       <a-text 
-        value="Haz clic en el enlace para navegar" 
+        value="👆 Usa el MOUSE para hacer clic en los objetos" 
         position="0 1.8 -2"
         color="#333333"
         align="center"
-        width="4">
+        width="5"
+        scale="0.8 0.8 0.8">
       </a-text>
+      
+      <!-- Script para manejar clics -->
+      <script>
+        AFRAME.registerComponent('link-handler', {
+          init: function() {
+            this.el.addEventListener('click', function(evt) {
+              evt.preventDefault();
+              evt.stopPropagation();
+              window.open('https://zonafosfeno.github.io/acab/', '_blank');
+            });
+          }
+        });
+        
+        document.querySelector('.clickable').setAttribute('link-handler', '');
+      </script>
     </a-scene>
   </body>
 </html>
