@@ -22,27 +22,44 @@
       <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
       <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
       
-      <!-- ENLACE CORREGIDO: Movido a posición visible -->
-   
-       <a-link 
+      <!-- ENLACE CORREGIDO: Configurado para requerir clic explícito -->
+      <a-link 
         href="https://zonafosfeno.github.io/acab/" 
-        position="0  .5  -3" 
+        position="0 0.5 -3" 
         image="#tiktok" 
-        title="Click para Web "
-        peekMode="true"
+        title="Haz clic para ir a Web"
+        titleColor="#FFFFFF"
+        titlePosition="bottom"
+        visualAspect="halfEllipse"
         radius="0.1"
-        visualAspect="halfEllipse">
+        peekMode="false"  <!-- Desactivado el peekMode que podía causar activación -->
+        onClick="event.preventDefault(); window.open('https://zonafosfeno.github.io/acab/', '_blank');">
       </a-link>
-      <!-- Cursor para hacer clic -->
-      <a-cursor></a-cursor>
       
-      <a-sky color="#87CEEB"></a-sky> <!-- Color celeste más natural -->
+      <!-- Cursor mejorado para mejor interacción -->
+      <a-cursor 
+        color="#4CC3D9"
+        fuse="false"
+        timeout="1000"
+        material="color: #4CC3D9; shader: flat">
+      </a-cursor>
       
-      <!-- Cámara (opcional, A-Frame ya incluye una) -->
+      <a-sky color="#87CEEB"></a-sky>
+      
+      <!-- Cámara -->
       <a-entity camera="userHeight: 1.6" look-controls wasd-controls></a-entity>
       
       <a-entity id="leftHand" link-controls="hand: left"></a-entity>
       <a-entity id="rightHand" link-controls="hand: right"></a-entity>
+      
+      <!-- Mensaje de instrucciones -->
+      <a-text 
+        value="Haz clic en el enlace para navegar" 
+        position="0 1.8 -2"
+        color="#333333"
+        align="center"
+        width="4">
+      </a-text>
     </a-scene>
   </body>
 </html>
